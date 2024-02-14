@@ -52,7 +52,7 @@ gN_f = @(x, y) [];
 
 
 %%
-draw = false;
+draw = true;
 if draw
 geom = defineTriangulation(K, dVertices, dBoundary, bcBoundary, ...
         bcVertices, bcValues, checkArea, checkAngle, areaValue, angleValue, true);
