@@ -70,7 +70,7 @@ printComparison(K, geom, U, X, Y, Z)
 end
 
 %%
-areaValue = .009*[0.08, 0.04, 0.008];
+areaValue = .007*[0.08, 0.04, 0.008];
 errorVector = zeros(6, length(areaValue));
 
 for exp = 1:length(areaValue)
