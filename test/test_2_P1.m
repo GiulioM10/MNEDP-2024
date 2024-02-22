@@ -52,7 +52,7 @@ gD_f = @(x, y) x + y;
 gN_f = @(x, y) mu(x, y) .* [-1, 0] * gradientutrue(x, y);
 
 %%
-draw = false;
+draw = true;
 if draw
 geom = defineTriangulation(K, dVertices, dBoundary, bcBoundary, ...
         bcVertices, bcValues, checkArea, checkAngle, areaValue, angleValue, true);

@@ -91,22 +91,22 @@ for exp = 1:length(areaValue)
     end
 end
 
-% approxDt =  [0.1, 0.08, 0.06];
-% errorVectorT = zeros(3, length(approxDt));
-% geom = defineTriangulation(K, dVertices, dBoundary, bcBoundary, ...
-%     bcVertices, bcValues, checkArea, checkAngle, areaValue(1), angleValue, false);
-% 
-% for exp = 1:length(approxDt)
-%     [t, dt] = discretizeTime(t0, T, approxDt(exp));
-% 
-%     [u, U, ~] = solveEvoProblem(K, geom, t, dt, rho, mu, beta, sigma, f, gD_f, Dt_gD_f, gN_f, u0_f);
-% 
-%     [err_L2, err_H1, ~] = computeError(K, geom, U, utrue, gradientutrue);
-% 
-%     errorVectorT(1, exp) = dt;
-%     errorVectorT(2, exp) = err_L2;
-%     errorVectorT(3, exp) = err_H1;
-% end
+approxDt =  [0.1, 0.08, 0.06];
+errorVectorT = zeros(3, length(approxDt));
+geom = defineTriangulation(K, dVertices, dBoundary, bcBoundary, ...
+    bcVertices, bcValues, checkArea, checkAngle, areaValue(1), angleValue, false);
+
+for exp = 1:length(approxDt)
+    [t, dt] = discretizeTime(t0, T, approxDt(exp));
+
+    [u, U, ~] = solveEvoProblem(K, geom, t, dt, rho, mu, beta, sigma, f, gD_f, Dt_gD_f, gN_f, u0_f);
+
+    [err_L2, err_H1, ~] = computeError(K, geom, U, utrue, gradientutrue);
+
+    errorVectorT(1, exp) = dt;
+    errorVectorT(2, exp) = err_L2;
+    errorVectorT(3, exp) = err_H1;
+end
 
 
 
@@ -137,19 +137,19 @@ xlabel("h_{max}")
 legend("log(E_0)", "log(E_\infty)", 'Location', 'northwest')
 grid on
 
-% figure
-% tiledlayout(1, 2)
-% nexttile
-% semilogy(errorVectorT(1, :), errorVectorT(2, :), "b-diamond")
-% title("Convergenza in L^2 (\Delta t)")
-% xlabel("\Delta t")
-% grid on
-% nexttile
-% semilogy(errorVectorT(1, :), errorVectorT(3, :), "m-diamond")
-% title("Convergenza in H^1 (\Delta t)")
-% xlabel("\Delta t")
-% ylabel("log(E_1)")
-% grid on
+figure
+tiledlayout(1, 2)
+nexttile
+semilogy(errorVectorT(1, :), errorVectorT(2, :), "b-diamond")
+title("Convergenza in L^2 (\Delta t)")
+xlabel("\Delta t")
+grid on
+nexttile
+semilogy(errorVectorT(1, :), errorVectorT(3, :), "m-diamond")
+title("Convergenza in H^1 (\Delta t)")
+xlabel("\Delta t")
+ylabel("log(E_1)")
+grid on
 
 clc
 l2 = polyfit(log(errorVector(1, :)), log(errorVector(2, :)), 1);
@@ -160,16 +160,16 @@ linf = polyfit(log(errorVector(1, :)), log(errorVector(4, :)), 1);
 linf = linf(1);
 cond = polyfit(log(errorVector(5, :)), log(errorVector(6, :)), 1);
 cond = cond(1);
-% l2t = polyfit(log(errorVectorT(1, :)), log(errorVectorT(2, :)), 1);
-% l2t = l2t(1);
-% h1t = polyfit(log(errorVectorT(1, :)), log(errorVectorT(3, :)), 1);
-% h1t = h1t(1);
+l2t = polyfit(log(errorVectorT(1, :)), log(errorVectorT(2, :)), 1);
+l2t = l2t(1);
+h1t = polyfit(log(errorVectorT(1, :)), log(errorVectorT(3, :)), 1);
+h1t = h1t(1);
 fprintf("------------------------------- \n")
 fprintf("Ordine di convergenza in L2 = %d \n", round(l2))
 fprintf("Ordine di convergenza in H1 = %d \n", round(h1))
 fprintf("Ordine di convergenza in LInf = %d \n", round(linf))
 fprintf("Ordine di crescita di cond(A) = %d \n", round(cond))
-% fprintf("Ordine di convergenza in L2 (dt) = %d \n", round(l2t))
-% fprintf("Ordine di convergenza in H1 (dt) = %d \n", round(h1t))
+fprintf("Ordine di convergenza in L2 (dt) = %d \n", round(l2t))
+fprintf("Ordine di convergenza in H1 (dt) = %d \n", round(h1t))
 fprintf("------------------------------- \n")
 

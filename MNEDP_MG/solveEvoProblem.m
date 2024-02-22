@@ -1,4 +1,4 @@
-function [u, U, condA] = solveEvoProblem(K, geom, t, Dt, rho, mu, beta, sigma, f, gD_f, Dt_gD_f, gN_f, u0_f, SUPG, MassLumping, iterative)
+function [u, U, condA] = solveEvoProblem(K, geom, t, Dt, rho, mu, beta, sigma, f, gD_f, Dt_gD_f, gN_f, u0_f, SUPG, MassLumping, iterative, forcePcg, forceGmres)
 %UNTITLED5 Summary of this function goes here
 %   Detailed explanation goes here
 arguments
@@ -18,6 +18,8 @@ arguments
     SUPG logical = false
     MassLumping logical = false
     iterative logical = true
+    forcePcg logical = false
+    forceGmres logical = false
 end
 %%% EXTRACT USEFUL DATA FROM geom %%%
 Ndof = max(geom.piv.piv); % # of degerees of freedom
@@ -281,6 +283,15 @@ W = M - (Dt/2)*A;
 solver = 0;
 perm = symrcm(Z);
 if iterative
+    if forcePcg
+        R = ichol(Z(perm, perm), struct('michol','on'));
+        disp("Using pcg...")
+        solver = 1;
+    elseif forceGmres
+        disp("Using gmres...")
+        [L, U] = ilu(Z(perm, perm));
+        solver = 2;
+    else
     try R = ichol(Z(perm, perm), struct('michol','on'));
         disp("Using pcg...")
         solver = 1;
@@ -288,6 +299,7 @@ if iterative
         disp("Using gmres...")
         [L, U] = ilu(Z(perm, perm));
         solver = 2;
+    end
     end
 else
     disp("Using \...")

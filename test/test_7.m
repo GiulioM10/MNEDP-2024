@@ -65,7 +65,7 @@ for exp = 1:length(approxDt)
 
     [t, dt] = discretizeTime(t0, T, approxDt(exp));
     tic
-    [~, ~, ~] = solveEvoProblem(K, geom, t, dt, rho, mu, beta, sigma, f, gD_f, Dt_gD_f, gN_f, u0_f, false, false, type-1);
+    [~, ~, ~] = solveEvoProblem(K, geom, t, dt, rho, mu, beta, sigma, f, gD_f, Dt_gD_f, gN_f, u0_f, false, false, ~(type==1));
     time = toc;
 
     times(type, exp) = time;
@@ -75,15 +75,18 @@ end
 
 cumul_times = cumsum(times, 2);
 
-figure
-bar(times')
-legend("Direct solver", "Iterative solver", 'Location', 'northwest')
-xlabel("Experiment")
-ylabel("time [s]")
+X = categorical({'0.1','0.05','0.01','0.005', '0.001'});
+X = reordercats(X,{'0.1','0.05','0.01','0.005', '0.001'});
 
 figure
-plot(1:length(approxDt), cumul_times(1,:), "-x", 1:length(approxDt), cumul_times(2,:), "-+")
-grid on
+bar(X, log(1+times'))
 legend("Direct solver", "Iterative solver", 'Location', 'northwest')
-ylabel("time [s]")
+xlabel("\Delta t")
+ylabel("log(1 +time)")
+
+% figure
+% plot(1:length(approxDt), cumul_times(1,:), "-x", 1:length(approxDt), cumul_times(2,:), "-+")
+% grid on
+% legend("Direct solver", "Iterative solver", 'Location', 'northwest')
+% ylabel("time [s]")
 
